@@ -1,3 +1,11 @@
+# classify.py : Classify text objects into two categories
+#
+# admysore-hdeshpa-machilla
+#
+# Based on skeleton code by D. Crandall, March 2021
+#
+
+
 import sys
 import re
 
