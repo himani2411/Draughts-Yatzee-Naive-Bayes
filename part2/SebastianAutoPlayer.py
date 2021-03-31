@@ -1,6 +1,6 @@
 # Automatic Sebastian game player
 # B551 Fall 2020
-# admysore-hdeshpa-machilla
+# admysore-hdeshpa-machilla-a2
 #
 # Based on skeleton code by D. Crandall
 #
