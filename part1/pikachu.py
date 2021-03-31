@@ -50,11 +50,11 @@ def goal_state(board, N, player, opponent):
 
 
 # http://www.cs.columbia.edu/~devans/TIC/AB.html
-# https://www.cs.huji.ac.il/~ai/projects/old/English-Draughts.pdf
-# The evaluation function written below takes into consideration two factors . One is Material score and other is mobility
-# score.
+
+# The evaluation function written below takes into consideration the Material score
 # Material score is the weighted difference of number of pieces between white and black pieces.
-# Mobility score is the difference in the number of possibe moves for white and black pieces
+
+
 def evaluation(board, N, player):
     if player in ('w'):
         player_weight = 1
@@ -75,7 +75,7 @@ def evaluation(board, N, player):
 
     pichus = (count_player_pichu) - (count_opponent_pichu )
     pikachu = (count_player_pikachu ) - (count_opponent_pikachu )
-    mobility = len(successors(board, player, N)) -(len(successors(board, opponent, N)))
+    # mobility = len(successors(board, player, N)) -(len(successors(board, opponent, N)))
 
     # piece_and_board =  piece_and_board(board, N, player, opponent)
     weight = (100 * pikachu) + ( pichus)
@@ -84,107 +84,6 @@ def evaluation(board, N, player):
 
     return weight
 
-
-def evaluation_adv(board, N, player):
-    opponent = get_opponent(player)
-    count_of_player = piece_and_board(board, N, player)
-    count_of_opponent = piece_and_board(board, N, opponent)
-    eval_weight = count_of_player - count_of_opponent
-
-    return eval_weight
-
-
-def evaluation_new_adv(board, N, player):
-    opponent = get_opponent(player)
-    count_of_player = piece_and_row(board, N, player)
-    count_of_opponent = piece_and_row(board, N, opponent)
-    eval_weight = count_of_player - count_of_opponent
-
-    return eval_weight
-
-
-def piece_and_row(board, N, player):
-    count_of_player_pichus = count_of_pichus_in_a_row(board, N, player)
-    count_of_player_pikachus = count_of_pichus_in_a_row(board, N, player.upper())
-
-    weight = count_of_player_pichus + (100 * count_of_player_pikachus)
-    return weight
-
-
-def count_of_pikachus_in_a_row(board, N, player):
-    count_of_pikachus = 0
-    number_of_rows = 0
-    for rows in board:
-        if player in rows:
-            number_of_rows += 1
-        count_of_pikachus += rows.count(player)
-
-    count_of_pikachus += rows
-    return count_of_pikachus
-
-
-def count_of_pichus_in_a_row(board, N, player):
-    count_of_pichus = 0
-    row_number = 0
-    for rows in board:
-        row_number += 1
-        count_of_pichus += rows.count(player) + row_number
-
-    return count_of_pichus
-
-
-def count_of_birds(board, N, player, start, end, increment):
-    count_of_bird = 0
-
-    for rows in range(start, end, increment):
-        row_of_board = board[rows]
-        count_of_bird += row_of_board.count(player)
-    return count_of_bird
-
-
-def piece_and_board(board, N, player):
-    count_of_player_pichu_in_players_half, count_of_player_pichu_in_opponent_half = 0, 0
-    count_of_player_pikachu, count_of_player_in_middle_row = 0, 0
-
-    count_of_player = 0
-    if N % 2 == 0:  # eg 4
-        if player == 'w':
-            players_half = N // 2  # 2  [0,2)
-            opponent_half = N - players_half  # 2  [2,3]
-            count_of_player_pichu_in_players_half = count_of_birds(board, N, player, 0, players_half, 1)
-            count_of_player_pichu_in_opponent_half = count_of_birds(board, N, player, opponent_half, N, 1)
-            count_of_player_pikachu = count_of_birds(board, N, player.upper(), 0, N, 1)
-            # count_of_player = 50 * count_of_player_pichu_in_players_half +
-            #                   100 * count_of_player_pichu_in_opponent_half +
-            #                   200 * count_of_player_pikachu
-        if player == 'b':
-            opponent_half = N // 2  # 2 [0,2)
-            players_half = N - opponent_half  # 2  [2,3]
-            count_of_player_pichu_in_players_half = count_of_birds(board, N, player, N - 1, players_half - 1, -1)
-            count_of_player_pichu_in_opponent_half = count_of_birds(board, N, player, 0, opponent_half, 1)
-            count_of_player_pikachu = count_of_birds(board, N, player.upper(), 0, N, 1)
-
-    if N % 2 == 1:  # eg 5
-        if player == 'w':
-            players_half = (N // 2) - 1  # 1 [0, 1]
-            opponent_half = players_half + 2  # 3 [3,4]
-            count_of_player_pichu_in_players_half = count_of_birds(board, N, player, 0, players_half + 1, 1)
-            count_of_player_pichu_in_opponent_half = count_of_birds(board, N, player, opponent_half, N, 1)
-            count_of_player_pikachu = count_of_birds(board, N, player, 0, N, 1)
-            count_of_player_in_middle_row = count_of_birds(board, N, player, players_half + 1, opponent_half,
-                                                           1)  # row 2
-        if player == 'b':
-            opponent_half = (N // 2) - 1  # 1 [0, 1]
-            players_half = opponent_half + 2  # 3 [3,4]
-            count_of_player_pichu_in_players_half = count_of_birds(board, N, player, N - 1, players_half - 1, -1)
-            count_of_player_pichu_in_opponent_half = count_of_birds(board, N, player, 0, opponent_half + 1, 1)
-            count_of_player_pikachu = count_of_birds(board, N, player, 0, N, 1)
-            count_of_player_in_middle_row = count_of_birds(board, N, player, players_half - 1, opponent_half, -1)
-
-    count_of_player = (50 * count_of_player_pichu_in_players_half) + (75 * count_of_player_in_middle_row) + (
-                100 * count_of_player_pichu_in_opponent_half) + (200 * count_of_player_pikachu)
-
-    return count_of_player
 
 def max_value(depth_limit, depth, N, player, timelimit, succ_board, alpha_value, beta_value, end_time):
     # global depth
@@ -845,3 +744,110 @@ if __name__ == "__main__":
 
     for new_board in find_best_move(board, N, player, timelimit):
         print(board_to_string(new_board, N))
+
+
+
+
+########## Different Evaluation functions I tried
+# https://www.cs.huji.ac.il/~ai/projects/old/English-Draughts.pdf
+# #
+# def evaluation_adv(board, N, player):
+#     opponent = get_opponent(player)
+#     count_of_player = piece_and_board(board, N, player)
+#     count_of_opponent = piece_and_board(board, N, opponent)
+#     eval_weight = count_of_player - count_of_opponent
+#
+#     return eval_weight
+#
+#
+# def evaluation_new_adv(board, N, player):
+#     opponent = get_opponent(player)
+#     count_of_player = piece_and_row(board, N, player)
+#     count_of_opponent = piece_and_row(board, N, opponent)
+#     eval_weight = count_of_player - count_of_opponent
+#
+#     return eval_weight
+#
+#
+# def piece_and_row(board, N, player):
+#     count_of_player_pichus = count_of_pichus_in_a_row(board, N, player)
+#     count_of_player_pikachus = count_of_pichus_in_a_row(board, N, player.upper())
+#
+#     weight = count_of_player_pichus + (100 * count_of_player_pikachus)
+#     return weight
+#
+#
+# def count_of_pikachus_in_a_row(board, N, player):
+#     count_of_pikachus = 0
+#     number_of_rows = 0
+#     for rows in board:
+#         if player in rows:
+#             number_of_rows += 1
+#         count_of_pikachus += rows.count(player)
+#
+#     count_of_pikachus += rows
+#     return count_of_pikachus
+#
+#
+# def count_of_pichus_in_a_row(board, N, player):
+#     count_of_pichus = 0
+#     row_number = 0
+#     for rows in board:
+#         row_number += 1
+#         count_of_pichus += rows.count(player) + row_number
+#
+#     return count_of_pichus
+#
+#
+# def count_of_birds(board, N, player, start, end, increment):
+#     count_of_bird = 0
+#
+#     for rows in range(start, end, increment):
+#         row_of_board = board[rows]
+#         count_of_bird += row_of_board.count(player)
+#     return count_of_bird
+#
+#
+# def piece_and_board(board, N, player):
+#     count_of_player_pichu_in_players_half, count_of_player_pichu_in_opponent_half = 0, 0
+#     count_of_player_pikachu, count_of_player_in_middle_row = 0, 0
+#
+#     count_of_player = 0
+#     if N % 2 == 0:  # eg 4
+#         if player == 'w':
+#             players_half = N // 2  # 2  [0,2)
+#             opponent_half = N - players_half  # 2  [2,3]
+#             count_of_player_pichu_in_players_half = count_of_birds(board, N, player, 0, players_half, 1)
+#             count_of_player_pichu_in_opponent_half = count_of_birds(board, N, player, opponent_half, N, 1)
+#             count_of_player_pikachu = count_of_birds(board, N, player.upper(), 0, N, 1)
+#             # count_of_player = 50 * count_of_player_pichu_in_players_half +
+#             #                   100 * count_of_player_pichu_in_opponent_half +
+#             #                   200 * count_of_player_pikachu
+#         if player == 'b':
+#             opponent_half = N // 2  # 2 [0,2)
+#             players_half = N - opponent_half  # 2  [2,3]
+#             count_of_player_pichu_in_players_half = count_of_birds(board, N, player, N - 1, players_half - 1, -1)
+#             count_of_player_pichu_in_opponent_half = count_of_birds(board, N, player, 0, opponent_half, 1)
+#             count_of_player_pikachu = count_of_birds(board, N, player.upper(), 0, N, 1)
+#
+#     if N % 2 == 1:  # eg 5
+#         if player == 'w':
+#             players_half = (N // 2) - 1  # 1 [0, 1]
+#             opponent_half = players_half + 2  # 3 [3,4]
+#             count_of_player_pichu_in_players_half = count_of_birds(board, N, player, 0, players_half + 1, 1)
+#             count_of_player_pichu_in_opponent_half = count_of_birds(board, N, player, opponent_half, N, 1)
+#             count_of_player_pikachu = count_of_birds(board, N, player, 0, N, 1)
+#             count_of_player_in_middle_row = count_of_birds(board, N, player, players_half + 1, opponent_half,
+#                                                            1)  # row 2
+#         if player == 'b':
+#             opponent_half = (N // 2) - 1  # 1 [0, 1]
+#             players_half = opponent_half + 2  # 3 [3,4]
+#             count_of_player_pichu_in_players_half = count_of_birds(board, N, player, N - 1, players_half - 1, -1)
+#             count_of_player_pichu_in_opponent_half = count_of_birds(board, N, player, 0, opponent_half + 1, 1)
+#             count_of_player_pikachu = count_of_birds(board, N, player, 0, N, 1)
+#             count_of_player_in_middle_row = count_of_birds(board, N, player, players_half - 1, opponent_half, -1)
+#
+#     count_of_player = (50 * count_of_player_pichu_in_players_half) + (75 * count_of_player_in_middle_row) + (
+#                 100 * count_of_player_pichu_in_opponent_half) + (200 * count_of_player_pikachu)
+#
+#     return count_of_player

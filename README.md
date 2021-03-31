@@ -37,11 +37,12 @@ and the ending position are empty.
 
 **Evaluation Function** - We are taking the count of player's and opponent's pichu's and pikachu's.
 We take the difference between the player and opponents pichus and pickachu counts. 
-Also, we take the mobility of the birds into account, which is how many moves the each bird can make, 
-which basically means the successors of the board.
-So we take the length of the successor boards that the player and opponent gives and take their differnece.
 I have assigned a weight of 100 for the pikachu difference, as they have more mobility. 
-75 for the mobility of the birds and 5 for the count of pichus
+And no weight for the mobility of the birds(pichus).
+
+I tried the different Evaluation functions from the the refrences below but 
+found that the basic function was giving me efficiency in terms of time
+# https://www.cs.huji.ac.il/~ai/projects/old/English-Draughts.pdf 
 
 **Strategy**
 
