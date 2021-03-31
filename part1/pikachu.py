@@ -743,7 +743,7 @@ if __name__ == "__main__":
 
 
     for new_board in find_best_move(board, N, player, timelimit):
-        print(board_to_string(new_board, N))
+        print(new_board)
 
 
 
