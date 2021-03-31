@@ -1,7 +1,7 @@
 #
 # pikachu.py : Play the game of Pikachu
 #
-# PLEASE PUT YOUR NAMES AND USER IDS HERE!
+# admysore-hdeshpa-machilla
 #
 # Based on skeleton code by D. Crandall, March 2021
 #
